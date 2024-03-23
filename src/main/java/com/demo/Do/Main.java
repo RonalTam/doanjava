@@ -2,6 +2,12 @@ package com.demo.Do;
 
 import java.io.File;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -68,21 +74,11 @@ public class Main {
 	}
 	
 
-	public static void ExcelWriter (List<SanPham> sp) {
-//	    public static void main(String[] args) {
-//	        // Tạo mảng sản phẩm
-//	        SanPham[] products = {
-//	                new SanPham("SP001", "Sản phẩm 1", 10, 100),
-//	                new SanPham("SP002", "Sản phẩm 2", 20, 200),
-//	                new SanPham("SP003", "Sản phẩm 3", 30, 300)
-//	        };
-
-	        // Tạo workbook mới
+	public static void nhapDuLieu (List<SanPham> sp) {
 	        try (Workbook workbook = new XSSFWorkbook()) {
-	            // Tạo một trang tính mới
 	            org.apache.poi.ss.usermodel.Sheet sheet = workbook.createSheet("Products");
 
-	            // Tạo tiêu đề cho các cột
+	            
 	            Row headerRow = sheet.createRow(0);
 	            String[] columns = {"Mã SP", "Tên sản phẩm", "Số lượng", "Giá"};
 	            for (int i = 0; i < columns.length; i++) {
@@ -90,7 +86,6 @@ public class Main {
 	                cell.setCellValue(columns[i]);
 	            }
 
-	            // Ghi thông tin sản phẩm vào các dòng tiếp theo
 	            for (int i = 0; i < sp.size(); i++) {
 	                Row row = sheet.createRow(i + 1);
 	                row.createCell(0).setCellValue(sp.get(i).maSP);
@@ -111,14 +106,43 @@ public class Main {
 	        }
 	    }
 
-	public static List<SanPham> readDataFromExcel(String path) {
+	public static void clearExcelData(String excelFilePath) {
+        try (FileInputStream inputStream = new FileInputStream(excelFilePath);
+             Workbook workbook = new XSSFWorkbook(inputStream)) {
+            
+            org.apache.poi.ss.usermodel.Sheet sheet = workbook.getSheetAt(0); // Get the first sheet (index 0)
+            
+            // Iterate through each row starting from the second row (index 1) and clear data in each cell
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row != null) {
+                    for (Cell cell : row) {
+                        cell.setCellValue(""); // Clear data in the cell
+                    }
+                }
+            }
+
+            // Write back the modified data to the Excel file
+            try (FileOutputStream outputStream = new FileOutputStream(excelFilePath)) {
+                workbook.write(outputStream);
+                System.out.println("Data in rows 2 and onwards in the Excel file have been cleared successfully.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+	
+	public static List<SanPham> xuatDuLieu(String path) {
         List<SanPham> sanPhamList = new ArrayList<>();
 
         try (FileInputStream fis = new FileInputStream(path);
              XSSFWorkbook workbook = new XSSFWorkbook(fis)) {
 
             // Lấy số lượng sheet trong Workbook
-            System.out.println("Đã lấy dữ liệu từ file!");
+            System.out.println("(!) Ghi thành công dữ liệu.");
             for (org.apache.poi.ss.usermodel.Sheet sheet : workbook) {
                 int rowCount = sheet.getLastRowNum() - sheet.getFirstRowNum();
      
@@ -281,7 +305,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-		sp = readDataFromExcel("D:/products1.xlsx");
+		sp = xuatDuLieu("D:/products1.xlsx");
 		boolean thoatVongLap = true;
 
 		while (thoatVongLap) {
@@ -292,8 +316,8 @@ public class Main {
 			System.out.println("|4. Chỉnh sửa sản phẩm                                    |");
 			System.out.println("|5. Tìm kiếm sản phẩm                                     |");
 			System.out.println("|6. Sắp xếp lại danh sách sản phẩm                        |");
-			System.out.println("|7. Ghi dữ liệu vao file txt                              |");
-			System.out.println("|8. Xuất dữ liệu ra file txt                              |");
+			System.out.println("|7. Ghi dữ liệu vao file excel 	                          |");
+			System.out.println("|8. Lấy dữ liệu từ file excel                             |");
 			System.out.println("|0. Thoát chương trình                                    |");
 			System.out.println("+---------------------------------------------------------+");
 			System.out.print("(?) Mời chọn chức năng: ");
@@ -319,10 +343,11 @@ public class Main {
 				sapXepSP(sp);
 				break;
 			case 7:
-				ExcelWriter(sp);
+//				clearExcelData("D:/products1.xlsx");
+				nhapDuLieu(sp);
 				break;
 			case 8:
-				readDataFromExcel("D:/products1.xlsx");
+				xuatDuLieu("D:/products1.xlsx");
 				break;
 			case 0:
 				thoatVongLap = false;
