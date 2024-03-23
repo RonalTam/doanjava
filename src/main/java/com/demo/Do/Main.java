@@ -74,7 +74,7 @@ public class Main {
 	}
 	
 
-	public static void nhapDuLieu (List<SanPham> sp) {
+	public static void ghiDuLieu (List<SanPham> sp) {
 	        try (Workbook workbook = new XSSFWorkbook()) {
 	            org.apache.poi.ss.usermodel.Sheet sheet = workbook.createSheet("Products");
 
@@ -97,7 +97,8 @@ public class Main {
 	            // Lưu workbook vào file Excel
 	            try (FileOutputStream fileOut = new FileOutputStream("D:/products1.xlsx")) {
 	                workbook.write(fileOut);
-	                System.out.println("File Excel đã được tạo thành công!");
+	                System.out.println("(!) File Excel đã được tạo thành công");
+	                System.out.println("");
 	            } catch (IOException e) {
 	                e.printStackTrace();
 	            }
@@ -110,22 +111,19 @@ public class Main {
         try (FileInputStream inputStream = new FileInputStream(excelFilePath);
              Workbook workbook = new XSSFWorkbook(inputStream)) {
             
-            org.apache.poi.ss.usermodel.Sheet sheet = workbook.getSheetAt(0); // Get the first sheet (index 0)
+            org.apache.poi.ss.usermodel.Sheet sheet = workbook.getSheetAt(0);
             
-            // Iterate through each row starting from the second row (index 1) and clear data in each cell
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
                 if (row != null) {
                     for (Cell cell : row) {
-                        cell.setCellValue(""); // Clear data in the cell
+                        cell.setCellValue("");
                     }
                 }
             }
 
-            // Write back the modified data to the Excel file
             try (FileOutputStream outputStream = new FileOutputStream(excelFilePath)) {
                 workbook.write(outputStream);
-                System.out.println("Data in rows 2 and onwards in the Excel file have been cleared successfully.");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -135,7 +133,7 @@ public class Main {
         }
     }
 	
-	public static List<SanPham> xuatDuLieu(String path) {
+	public static List<SanPham> layDuLieu(String path) {
         List<SanPham> sanPhamList = new ArrayList<>();
 
         try (FileInputStream fis = new FileInputStream(path);
@@ -143,6 +141,7 @@ public class Main {
 
             // Lấy số lượng sheet trong Workbook
             System.out.println("(!) Ghi thành công dữ liệu.");
+            System.out.println("");
             for (org.apache.poi.ss.usermodel.Sheet sheet : workbook) {
                 int rowCount = sheet.getLastRowNum() - sheet.getFirstRowNum();
      
@@ -305,7 +304,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-		sp = xuatDuLieu("D:/products1.xlsx");
+		sp = layDuLieu("D:/products1.xlsx");
 		boolean thoatVongLap = true;
 
 		while (thoatVongLap) {
@@ -343,11 +342,11 @@ public class Main {
 				sapXepSP(sp);
 				break;
 			case 7:
-//				clearExcelData("D:/products1.xlsx");
-				nhapDuLieu(sp);
+				clearExcelData("D:/products1.xlsx");
+				ghiDuLieu(sp);
 				break;
 			case 8:
-				xuatDuLieu("D:/products1.xlsx");
+				layDuLieu("D:/products1.xlsx");
 				break;
 			case 0:
 				thoatVongLap = false;
