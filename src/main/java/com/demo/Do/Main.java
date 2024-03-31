@@ -1,53 +1,28 @@
 package com.demo.Do;
 
 import java.io.File;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
-
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.List;
-
 import org.apache.poi.sl.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
-
 import java.io.FileWriter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
-
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 @SuppressWarnings("unused")
 public class Main {
@@ -55,6 +30,7 @@ public class Main {
 
 	public static void themSanPham(List<SanPham> sp) {
 		Scanner sc = new Scanner(System.in);
+		System.out.println("");
 		System.out.print("(?) Nhập số sản phẩm muốn thêm: ");
 		int n = Integer.parseInt(sc.nextLine());
 		for (int i = 0; i < n; i++) {
@@ -71,6 +47,7 @@ public class Main {
 			sp.add(a);
 
 		}
+		System.out.println("");
 	}
 
 	public static void ghiDuLieu(List<SanPham> sp) {
@@ -478,6 +455,7 @@ public class Main {
 				sp = layDuLieu("D:/products1.xlsx");
 				break;
 			case 0:
+				System.out.println("(!) Đã thoát khỏi chương trình.");
 				thoatVongLap = false;
 				break;
 			default:
